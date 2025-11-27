@@ -242,7 +242,7 @@ const menuGroups = [
       {
         icon: GridIcon,
         name: "Dashboard",
-        path: "/dashboard",
+        path: "/",
       },
       {
         icon: CalenderIcon,
@@ -271,21 +271,21 @@ const menuGroups = [
       },
     ],
   },
-  {
-    title: "Others",
-    items: [
-      {
-        icon: UserCircleIcon,
-        name: "User Management",
-        path: "/usermanagement",
-      },
-      {
-        icon: SettingsIcon,
-        name: "Account Settings",
-        path: "/accountsettings",
-      },
-    ],
-  },
+  // {
+  //   title: "Others",
+  //   items: [
+  //     {
+  //       icon: UserCircleIcon,
+  //       name: "User Management",
+  //       path: "/usermanagement",
+  //     },
+  //     {
+  //       icon: SettingsIcon,
+  //       name: "Account Settings",
+  //       path: "/accountsettings",
+  //     },
+  //   ],
+  // },
 ];
 
 const isActive = (path) => route.path === path;
