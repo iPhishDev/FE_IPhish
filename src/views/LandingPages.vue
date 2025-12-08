@@ -56,6 +56,16 @@
                                 class="dark:bg-dark-900 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                             ></textarea>
                         </div>
+                        <div>
+                            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                            Redirect URL
+                            </label>
+                            <input
+                            v-model="redirect_url"
+                            type="text"
+                            class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
+                            />
+                        </div>
                         <!-- Checkbox capture_credentials -->
                         <div>
                             <label
@@ -144,7 +154,7 @@
                         message="Credentials are currently not encrypted. This means that captured passwords are stored in the database as cleartext. Be careful with this!"
                         :showLink="false" />
                         <!-- ...existing code... -->
-                        <div v-if="selectedEvent" class="mt-6">
+                        <!-- <div v-if="selectedEvent" class="mt-6">
                             <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-400">
                             Redirect To
                             </label>
@@ -158,7 +168,7 @@
                             title="Info"
                             message="This options lets you redirect users to a specific URL after credentials are submitted."
                             :showLink="false" />
-                        </div>
+                        </div> -->
                         <TipsAI class="mt-3"
                             v-model="generateAI"
                             variant="success"
@@ -297,15 +307,18 @@ const fetchPages = async () => {
     }
 }
 
-const handleAddOrUpdateEvent = () => {
-    if (selectedEvent.value) {
-        // Update existing event
-        editPage(selectedEvent.value)
-    } else {
-        // Add new event
-        savePage()
+const handleAddOrUpdateEvent = async () => {
+    try {
+        if (selectedEvent.value) {
+            await editPage(selectedEvent.value)
+        } else {
+            await savePage()
+        }
+        closeModal()
+    } catch (error) {
+        console.error('Error:', error)
+        errorMessage.value = 'Gagal menyimpan data'
     }
-    closeModal()
 }
 
 const savePage = async () => {
@@ -317,7 +330,7 @@ const savePage = async () => {
             html: landingPage.value,
             capture_credentials: capture_credentials.value,
             capture_passwords: capture_passwords.value,
-            redirect_url: "http://example.com",
+            redirect_url: redirect_url.value,
             modified_date: new Date().toISOString(),
         }
         await axios.post('/api/phishing/pages/', body, {
@@ -332,6 +345,7 @@ const savePage = async () => {
     } catch (error) {
         errorMessage.value = 'Failed to save landing page'
         console.error(error)
+        throw error
     }
 }
 
@@ -359,6 +373,7 @@ const editPage = async (data) => {
     } catch (error) {
         errorMessage.value = 'Failed to edit landing page'
         console.error(error)
+        throw error
     }
 }
 

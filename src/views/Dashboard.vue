@@ -29,6 +29,7 @@ import DashboardReport from '../components/dashboard/DashboardReport.vue'
 import LoadingWheel from '../components/common/LoadingWheel.vue'
 import { ref, nextTick, onMounted } from 'vue'
 import axios from 'axios'
+import keycloak from "@/auth/keycloak";
 
 // Definition
 const datas = ref([])
@@ -39,8 +40,8 @@ const title1 = "Human Security Awareness Score Average"
 const title2 = "Potential Breach Average"
 const titleDescription1 = "Rata rata nilai Potential Breach dari 3 kampanye terakhir"
 const titleDescription2 = "Rata rata nilai awareness dari 3 kampanye terakhir"
-const deskripsi1 = ["Skor Awareness = 100 - vulnerability", "Vulnerability = 0.5*℅ + 0.35*s/c + 0.15*s/n", "% : jumlah klik link setelah buka email", "s/c : jumlah yang submit data setelah klik link", "s/n : jumlah yang submit data terhadap populasi"]
-const deskripsi2 = ["Skor Potential Breach = (S + (C - S)*p) / N", "S: Jumlah submit credential", "C: Jumlah klik link phishing", "N: Jumlah target yang dikirim (Populasi)", "p: Submitted/clicked dari tahun sebelumnya"]
+const deskripsi2 = ["Skor Awareness = 100 - vulnerability", "Vulnerability = 0.5*℅ + 0.35*s/c + 0.15*s/n", "% : jumlah klik link setelah buka email", "s/c : jumlah yang submit data setelah klik link", "s/n : jumlah yang submit data terhadap populasi"]
+const deskripsi1 = ["Skor Potential Breach = (S + (C - S)*p) / N", "S: Jumlah submit credential", "C: Jumlah klik link phishing", "N: Jumlah target yang dikirim (Populasi)", "p: Submitted/clicked dari tahun sebelumnya"]
 
 // Methods
 const fetchPages = async () => {

@@ -309,14 +309,17 @@ const editData = async (data) => {
 }
 
 const handleAddOrUpdateEvent = async () => {
-    if (selectedEvent.value) {
-        // Update existing event
-        await updateGroup(selectedEvent.value.id)
-    } else {
-        // Add new event
-        await saveGroup()
+    try {
+        if (selectedEvent.value) {
+            await updateGroup(selectedEvent.value.id)
+        } else {
+            await saveGroup()
+        }
+        closeModal()
+    } catch (error) {
+        console.error('Error:', error)
+        errorMessage.value = 'Gagal menyimpan data'
     }
-    closeModal()
 }
 
 const handleDeleteEvent = async (data) => {
@@ -373,21 +376,6 @@ const fetchPages = async () => {
     try {
         const token = keycloak.token
         const response = await axios.get('/api/phishing/groups/', {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            },
-        })
-        datas.value = response.data
-    } catch (error) {
-        console.error('Failed to fetch groups', error)
-    }
-}
-
-const getGroups = async () => {
-    try {
-        const token = keycloak.token
-        const response = await axios.get('api/groups/', {
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json',
@@ -473,11 +461,11 @@ const saveGroup = async () => {
         })
 
         feedbackMessage.value = 'Create group successfully'
-        await getGroups() // Refresh the groups list
-        
+        await fetchPages() // Refresh the groups list
     } catch (error) {
         errorMessage.value = 'Failed to create group'
         console.error('Failed to create group:', error)
+        throw error
     }
 }
 
@@ -505,10 +493,11 @@ const updateGroup = async (id) => {
             },
         })
         feedbackMessage.value = 'Update group successfully'
-        await getGroups() // Refresh the groups list
+        await fetchPages() // Refresh the groups list
     } catch (error) {
         errorMessage.value = 'Failed to update group'
         console.error('Failed to update group:', error)
+        throw error
     }
 }
 
@@ -522,7 +511,7 @@ const deleteGroupById = async (id) => {
             },
         })
         feedbackMessage.value = 'Delete group successfully'
-        await getGroups() // Refresh the groups list
+        await fetchPages() // Refresh the groups list
     } catch (error) {
         errorMessage.value = 'Failed to delete group'
         console.error('Failed to delete group:', error)
@@ -542,7 +531,7 @@ const importGroups = async (file) => {
             },
         })
         feedbackMessage.value = 'Import groups successfully'
-        await getGroups() // Refresh the groups list
+        await fetchPages() // Refresh the groups list
     } catch (error) {
         errorMessage.value = 'Failed to import groups'
         console.error('Failed to import groups:', error)

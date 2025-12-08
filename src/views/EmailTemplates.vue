@@ -250,15 +250,18 @@ onMounted(() => {
     fetchPages()
 })
 
-const handleAddOrUpdateEvent = () => {
-    if (selectedEvent.value) {
-        // Update existing event
-        editPage(selectedEvent.value)
-    } else {
-        // Add new event
-        savePage()
+const handleAddOrUpdateEvent = async () => {
+    try {
+        if (selectedEvent.value) {
+            await editPage(selectedEvent.value)
+        } else {
+            await savePage()
+        }
+        closeModal()
+    } catch (error) {
+        console.error('Error:', error)
+        errorMessage.value = 'Gagal menyimpan data'
     }
-    closeModal()
 }
 
 const savePage = async () => {
@@ -286,6 +289,7 @@ const savePage = async () => {
     } catch (error) {
         errorMessage.value = 'Failed to save email template.'
         console.error(error)
+        throw error
     }
 }
 
@@ -302,7 +306,7 @@ const editPage = async (data) => {
             modified_date: new Date().toISOString(),
             attachments: [],
         }
-        await axios.put(`api/templates/${data.id}`, body, {
+        await axios.put(`api/phishing/templates/${data.id}`, body, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json',
@@ -314,6 +318,7 @@ const editPage = async (data) => {
     } catch (error) {
         errorMessage.value = 'Failed to edit email template.'
         console.error(error)
+        throw error
     }
 }
 

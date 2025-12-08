@@ -428,15 +428,18 @@ const editData = async (data) => {
     isOpen.value = true
 }
 
-const handleAddOrUpdateEvent = () => {
-    if (selectedEvent.value) {
-        // Update existing event
-        updateSendingProfile()
-    } else {
-        // Add new event
-        saveSendingProfile()
+const handleAddOrUpdateEvent = async () => {
+    try {
+        if (selectedEvent.value) {
+            await updateSendingProfile(selectedEvent.value.id)
+        } else {
+            await saveSendingProfile()
+        }
+        closeModal()
+    } catch (error) {
+        console.error('Error:', error)
+        errorMessage.value = 'Gagal menyimpan data'
     }
-    closeModal()
 }
 
 const handleDeleteEvent = async (data) => {
@@ -515,7 +518,7 @@ const saveSendingProfile = async () => {
 
         }
 
-        const response = await axios.post('/api/phishing/smtp/', body, {
+        await axios.post('/api/phishing/smtp/', body, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json',
@@ -526,15 +529,15 @@ const saveSendingProfile = async () => {
         await getAllSendingProfiles() // Refresh the groups list
     } catch (error) {
         console.error('Failed to save SMTP profile', error)
-        return null
+        throw error
     }
 }
 
-const updateSendingProfile = async () => {
+const updateSendingProfile = async (id) => {
     try {
         const token = keycloak.token
         const body = {
-            id: id.value,
+            id: id,
             name: profileName.value,
             interface_type: interfaceType.value,
             from_address: SMTPFrom.value,
@@ -548,7 +551,7 @@ const updateSendingProfile = async () => {
             ]
         }
 
-        const response = await axios.put(`/api/phishing/smtp/${id.value}`, body, {
+        await axios.put(`/api/phishing/smtp/${id}`, body, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json',
@@ -559,7 +562,7 @@ const updateSendingProfile = async () => {
         await getAllSendingProfiles() // Refresh the groups list
     } catch (error) {
         console.error('Failed to update SMTP profile', error)
-        return null
+        throw error
     }
 }
 

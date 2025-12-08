@@ -46,6 +46,7 @@ import { ref, onMounted, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from 'axios'
 import ReportCampaign from '@/components/campaign/ReportCampaign.vue'
+import keycloak from "@/auth/keycloak";
 
 const data = ref({})
 const flagCompleted = ref(false)
