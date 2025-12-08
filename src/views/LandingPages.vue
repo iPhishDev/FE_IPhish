@@ -325,6 +325,7 @@ const handleAddOrUpdateEvent = async () => {
 const savePage = async () => {
     try {
         const token = keycloak.token
+        console.log('token = ', token)
         const body = {
             // id: id.value,
             name: pageName.value,
@@ -341,6 +342,7 @@ const savePage = async () => {
             },
         })
 
+        console.log('response = ', response)
         // Cek status response
         if (response.status !== 200 && response.status !== 201) {
             throw new Error(`Unexpected response status: ${response.status}`)

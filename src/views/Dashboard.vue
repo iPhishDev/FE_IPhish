@@ -1,22 +1,22 @@
 <template>
-  <LoadingWheel v-if="isLoading" />
+    <LoadingWheel v-if="isLoading" />
 
-  <admin-layout>
-    <div class="grid grid-cols-12 gap-4 md:gap-6">
-      <div class="col-span-12">
-        <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 md:gap-6">
-          <DashboardCard :title="title1" :titleDescription="titleDescription1" :description="deskripsi2" :data="dataAverage?.data?.awareness_score || 0" :isPotentialBreach="false"/>
-          <DashboardCard :title="title2" :titleDescription="titleDescription2" :description="deskripsi1" :data="(dataAverage?.data?.potential_breach * 100) || 0" :isPotentialBreach="true"/>
+    <admin-layout>
+        <div class="grid grid-cols-12 gap-4 md:gap-6">
+        <div class="col-span-12">
+            <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 md:gap-6">
+            <DashboardCard :title="title1" :titleDescription="titleDescription1" :description="deskripsi2" :data="dataAverage?.data?.awareness_score || 0" :isPotentialBreach="false"/>
+            <DashboardCard :title="title2" :titleDescription="titleDescription2" :description="deskripsi1" :data="(dataAverage?.data?.potential_breach * 100) || 0" :isPotentialBreach="true"/>
+            </div>
         </div>
-      </div>
-      <div class="col-span-12">
-        <statistics-chart :data-curvas="dataCurvas"/>
-      </div>
-      <div class="col-span-12">
-        <DashboardReport  :dataAverage="dataAverage"/>
-      </div>
-    </div>
-  </admin-layout>
+        <div class="col-span-12">
+            <statistics-chart :data-curvas="dataCurvas"/>
+        </div>
+        <div class="col-span-12">
+            <DashboardReport  :dataAverage="dataAverage"/>
+        </div>
+        </div>
+    </admin-layout>
 </template>
 
 <script setup>
