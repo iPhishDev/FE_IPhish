@@ -308,6 +308,7 @@ const fetchPages = async () => {
 }
 
 const handleAddOrUpdateEvent = async () => {
+    errorMessage.value = null
     try {
         if (selectedEvent.value) {
             await editPage(selectedEvent.value)
@@ -317,7 +318,7 @@ const handleAddOrUpdateEvent = async () => {
         closeModal()
     } catch (error) {
         console.error('Error:', error)
-        errorMessage.value = 'Gagal menyimpan data'
+        errorMessage.value = error?.response?.data?.message || 'Gagal menyimpan data'
     }
 }
 
@@ -325,7 +326,7 @@ const savePage = async () => {
     try {
         const token = keycloak.token
         const body = {
-            id: id.value,
+            // id: id.value,
             name: pageName.value,
             html: landingPage.value,
             capture_credentials: capture_credentials.value,
@@ -333,12 +334,18 @@ const savePage = async () => {
             redirect_url: redirect_url.value,
             modified_date: new Date().toISOString(),
         }
-        await axios.post('/api/phishing/pages/', body, {
+        const response = await axios.post('/api/phishing/pages/', body, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json',
             },
         })
+
+        // Cek status response
+        if (response.status !== 200 && response.status !== 201) {
+            throw new Error(`Unexpected response status: ${response.status}`)
+        }
+
         // Tambahkan notifikasi sukses atau refresh data di sini
         feedbackMessage.value = 'Data saved successfully'
         await fetchPages()
@@ -361,12 +368,18 @@ const editPage = async (data) => {
             redirect_url: data.redirect_url,
             modified_date: new Date().toISOString(),
         }
-        await axios.put(`/api/phishing/pages/${data.id}`, body, {
+        const response = await axios.put(`/api/phishing/pages/${data.id}`, body, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json',
             },
         })
+
+        // Cek status response
+        if (response.status !== 200 && response.status !== 201) {
+            throw new Error(`Unexpected response status: ${response.status}`)
+        }
+
         // Tambahkan notifikasi sukses atau refresh data di sini
         feedbackMessage.value = 'Data edited successfully'
         await fetchPages()

@@ -49,6 +49,7 @@
 import Swal from 'sweetalert2'
 import { defineProps, computed, ref, onMounted } from 'vue'
 import axios from 'axios'
+import keycloak from "@/auth/keycloak";
 
 const emit = defineEmits(['delete'])
 const props = defineProps({
