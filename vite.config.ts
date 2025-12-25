@@ -20,7 +20,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://api.managementcorp.my.id',
+        target: 'https://api.humanfirewall.my.id',
         changeOrigin: true,
         secure: false, // karena Gophish pakai self-signed cert
       },
